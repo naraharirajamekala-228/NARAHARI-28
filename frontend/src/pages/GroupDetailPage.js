@@ -317,42 +317,42 @@ const GroupDetailPage = ({ user, setUser }) => {
         </div>
       </div>
 
-      {/* Payment Modal */}
       <Dialog open={showPaymentModal} onOpenChange={setShowPaymentModal}>
         <DialogContent data-testid="payment-modal">
           <DialogHeader>
-            <DialogTitle>Upgrade to Premium</DialogTitle>
+            <DialogTitle>Pay to Join This Group</DialogTitle>
             <DialogDescription>
-              Join MyApp Premium to create and join car-buying groups
+              Pay ₹1,000 to join this car-buying group
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-6 py-4">
             <div className="bg-gradient-to-br from-[#0B5FFF] to-[#0951dd] text-white rounded-xl p-6 text-center">
               <div className="text-5xl font-bold mb-2">₹1,000</div>
-              <div className="text-blue-100">One-time payment</div>
+              <div className="text-blue-100">Per group payment</div>
+              <div className="text-sm text-blue-200 mt-2">for {group?.car_model}</div>
             </div>
 
             <div className="space-y-3">
               <div className="flex items-start">
                 <CheckCircle2 className="w-5 h-5 text-green-600 mr-3 mt-0.5" />
                 <div>
-                  <div className="font-medium text-gray-900">Join unlimited groups</div>
-                  <div className="text-sm text-gray-600">Access all active car-buying groups</div>
-                </div>
-              </div>
-              <div className="flex items-start">
-                <CheckCircle2 className="w-5 h-5 text-green-600 mr-3 mt-0.5" />
-                <div>
-                  <div className="font-medium text-gray-900">Create your own groups</div>
-                  <div className="text-sm text-gray-600">Start groups for any car model</div>
+                  <div className="font-medium text-gray-900">Join this group</div>
+                  <div className="text-sm text-gray-600">Become part of bulk negotiation</div>
                 </div>
               </div>
               <div className="flex items-start">
                 <CheckCircle2 className="w-5 h-5 text-green-600 mr-3 mt-0.5" />
                 <div>
                   <div className="font-medium text-gray-900">Vote on dealer offers</div>
-                  <div className="text-sm text-gray-600">Participate in negotiations</div>
+                  <div className="text-sm text-gray-600">Have your say in choosing the best deal</div>
+                </div>
+              </div>
+              <div className="flex items-start">
+                <CheckCircle2 className="w-5 h-5 text-green-600 mr-3 mt-0.5" />
+                <div>
+                  <div className="font-medium text-gray-900">Save thousands</div>
+                  <div className="text-sm text-gray-600">Get exclusive bulk discounts</div>
                 </div>
               </div>
             </div>
@@ -363,7 +363,7 @@ const GroupDetailPage = ({ user, setUser }) => {
               disabled={processing}
               data-testid="pay-now-btn"
             >
-              {processing ? 'Processing...' : 'Pay ₹1,000 Now'}
+              {processing ? 'Processing...' : 'Pay ₹1,000 & Join Now'}
             </Button>
 
             <p className="text-xs text-center text-gray-500">
