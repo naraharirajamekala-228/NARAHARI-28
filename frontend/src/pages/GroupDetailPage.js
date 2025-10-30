@@ -71,7 +71,7 @@ const GroupDetailPage = ({ user, setUser }) => {
       return;
     }
 
-    if (!user.is_premium) {
+    if (!hasPaid) {
       setShowPaymentModal(true);
       return;
     }
@@ -91,14 +91,11 @@ const GroupDetailPage = ({ user, setUser }) => {
   const handlePayment = async () => {
     setProcessing(true);
     try {
-      // Mock payment
-      await axios.post(`${API}/users/upgrade-premium`);
+      // Pay for this specific group
+      await axios.post(`${API}/users/pay-for-group/${groupId}`);
       
-      // Update user state
-      const userRes = await axios.get(`${API}/auth/me`);
-      setUser(userRes.data);
-      
-      toast.success('Payment successful! You are now a premium member.');
+      toast.success('Payment successful for this group!');
+      setHasPaid(true);
       setShowPaymentModal(false);
       
       // Auto join the group
