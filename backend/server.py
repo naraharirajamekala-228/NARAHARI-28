@@ -209,18 +209,37 @@ async def get_me(current_user: User = Depends(get_current_user)):
 
 # ============= USER ROUTES =============
 
-@api_router.post("/users/upgrade-premium")
-async def upgrade_to_premium(current_user: User = Depends(get_current_user)):
-    if current_user.is_premium:
-        raise HTTPException(status_code=400, detail="Already a premium member")
+@api_router.post("/users/pay-for-group/{group_id}")
+async def pay_for_group(group_id: str, current_user: User = Depends(get_current_user)):
+    # Check if group exists
+    group = await db.groups.find_one({"id": group_id}, {"_id": 0})
+    if not group:
+        raise HTTPException(status_code=404, detail="Group not found")
     
-    # Mock payment - just upgrade the user
-    await db.users.update_one(
-        {"id": current_user.id},
-        {"$set": {"is_premium": True}}
+    # Check if already paid for this group
+    existing_payment = await db.payments.find_one(
+        {"user_id": current_user.id, "group_id": group_id},
+        {"_id": 0}
     )
+    if existing_payment:
+        raise HTTPException(status_code=400, detail="Already paid for this group")
     
-    return {"message": "Successfully upgraded to premium", "is_premium": True}
+    # Mock payment - create payment record
+    payment = Payment(
+        user_id=current_user.id,
+        group_id=group_id
+    )
+    await db.payments.insert_one(payment.model_dump())
+    
+    return {"message": "Payment successful", "payment_id": payment.id}
+
+@api_router.get("/users/check-payment/{group_id}")
+async def check_group_payment(group_id: str, current_user: User = Depends(get_current_user)):
+    payment = await db.payments.find_one(
+        {"user_id": current_user.id, "group_id": group_id},
+        {"_id": 0}
+    )
+    return {"has_paid": payment is not None}
 
 # ============= GROUP ROUTES =============
 
