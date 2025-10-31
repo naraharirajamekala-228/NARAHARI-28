@@ -322,13 +322,13 @@ const GroupDetailPage = ({ user, setUser }) => {
           <DialogHeader>
             <DialogTitle>Pay to Join This Group</DialogTitle>
             <DialogDescription>
-              Pay ₹1,000 to join this car-buying group
+              Pay ₹5,000 to join this car-buying group
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-6 py-4">
             <div className="bg-gradient-to-br from-[#0B5FFF] to-[#0951dd] text-white rounded-xl p-6 text-center">
-              <div className="text-5xl font-bold mb-2">₹1,000</div>
+              <div className="text-5xl font-bold mb-2">₹5,000</div>
               <div className="text-blue-100">Per group payment</div>
               <div className="text-sm text-blue-200 mt-2">for {group?.car_model}</div>
             </div>
@@ -363,7 +363,7 @@ const GroupDetailPage = ({ user, setUser }) => {
               disabled={processing}
               data-testid="pay-now-btn"
             >
-              {processing ? 'Processing...' : 'Pay ₹1,000 & Join Now'}
+              {processing ? 'Processing...' : 'Pay ₹5,000 & Join Now'}
             </Button>
 
             <p className="text-xs text-center text-gray-500">
