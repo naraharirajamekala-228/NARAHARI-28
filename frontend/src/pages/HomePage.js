@@ -21,7 +21,7 @@ const HomePage = ({ user, setUser }) => {
   const [authForm, setAuthForm] = useState({ name: '', email: '', password: '' });
   const [loading, setLoading] = useState(false);
 
-  const brands = ['All', 'Tata', 'Mahindra', 'Kia', 'Hyundai', 'Maruti', 'Honda'];
+  const brands = ['All', 'Tata', 'Mahindra', 'Kia', 'Hyundai', 'Maruti', 'Honda', 'Volkswagen', 'Toyota'];
 
   useEffect(() => {
     fetchGroups();
