@@ -445,6 +445,83 @@ const GroupDetailPage = ({ user, setUser }) => {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Car Selection Modal */}
+      <Dialog open={showCarSelectionModal} onOpenChange={setShowCarSelectionModal}>
+        <DialogContent data-testid="car-selection-modal">
+          <DialogHeader>
+            <DialogTitle>Select Your Car & Variant</DialogTitle>
+            <DialogDescription>
+              Choose the specific car model and variant you want to buy from {group?.car_model}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-4">
+            <div>
+              <Label htmlFor="car-model">Car Model</Label>
+              <Select 
+                value={selectedModel} 
+                onValueChange={(value) => {
+                  setSelectedModel(value);
+                  setSelectedVariant('');
+                }}
+              >
+                <SelectTrigger id="car-model" data-testid="car-model-select">
+                  <SelectValue placeholder="Select car model" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.keys(carData).map((model) => (
+                    <SelectItem key={model} value={model}>
+                      {model}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {selectedModel && (
+              <div>
+                <Label htmlFor="variant">Variant</Label>
+                <Select value={selectedVariant} onValueChange={setSelectedVariant}>
+                  <SelectTrigger id="variant" data-testid="variant-select">
+                    <SelectValue placeholder="Select variant" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {carData[selectedModel]?.map((variant) => (
+                      <SelectItem key={variant} value={variant}>
+                        {variant}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
+            {selectedModel && selectedVariant && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="flex items-center">
+                  <Car className="w-5 h-5 text-blue-600 mr-3" />
+                  <div>
+                    <div className="font-semibold text-gray-900">Your Selection</div>
+                    <div className="text-sm text-gray-700">
+                      {selectedModel} - {selectedVariant}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <Button 
+              onClick={handleSaveCarPreference} 
+              className="w-full" 
+              disabled={!selectedModel || !selectedVariant || processing}
+              data-testid="save-preference-btn"
+            >
+              {processing ? 'Saving...' : 'Save My Preference'}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
