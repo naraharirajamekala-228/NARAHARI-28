@@ -363,6 +363,7 @@ async def join_group(group_id: str, current_user: User = Depends(get_current_use
         user_name=current_user.name,
         car_model=payment["car_model"],
         variant=payment["variant"],
+        transmission=payment["transmission"],
         on_road_price=payment["on_road_price"]
     )
     await db.car_preferences.insert_one(car_preference.model_dump())
