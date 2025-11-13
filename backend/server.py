@@ -126,12 +126,14 @@ class CarPreference(BaseModel):
     user_name: str
     car_model: str
     variant: str
+    transmission: str  # Manual or Automatic
     on_road_price: float
     created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 class CarPreferenceCreate(BaseModel):
     car_model: str
     variant: str
+    transmission: str
     on_road_price: float
 
 # ============= HELPER FUNCTIONS =============
