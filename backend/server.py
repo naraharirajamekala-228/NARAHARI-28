@@ -992,7 +992,7 @@ async def seed_initial_data():
         {
             "car_model": "Tata Motors",
             "brand": "Tata",
-            "city": "All India",
+            "city": "Telangana",
             "image_url": "https://customer-assets.emergentagent.com/job_a5689270-22d8-4a27-847f-79733a2db487/artifacts/jig16627_tata.png",
             "max_members": 50,
             "current_members": 32
@@ -1000,7 +1000,7 @@ async def seed_initial_data():
         {
             "car_model": "Mahindra & Mahindra",
             "brand": "Mahindra",
-            "city": "All India",
+            "city": "Telangana",
             "image_url": "https://customer-assets.emergentagent.com/job_a5689270-22d8-4a27-847f-79733a2db487/artifacts/y5bo7393_mahindra.png",
             "max_members": 50,
             "current_members": 41
@@ -1008,7 +1008,7 @@ async def seed_initial_data():
         {
             "car_model": "Kia Motors",
             "brand": "Kia",
-            "city": "All India",
+            "city": "Telangana",
             "image_url": "https://customer-assets.emergentagent.com/job_a5689270-22d8-4a27-847f-79733a2db487/artifacts/ynyx5p8u_Kia.png",
             "max_members": 50,
             "current_members": 28
@@ -1016,7 +1016,7 @@ async def seed_initial_data():
         {
             "car_model": "Hyundai Motors",
             "brand": "Hyundai",
-            "city": "All India",
+            "city": "Telangana",
             "image_url": "https://customer-assets.emergentagent.com/job_a5689270-22d8-4a27-847f-79733a2db487/artifacts/pl3kib9p_Hyundai.png",
             "max_members": 50,
             "current_members": 35
@@ -1024,7 +1024,7 @@ async def seed_initial_data():
         {
             "car_model": "Honda Cars",
             "brand": "Honda",
-            "city": "All India",
+            "city": "Telangana",
             "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Honda_logo.svg/2560px-Honda_logo.svg.png",
             "max_members": 50,
             "current_members": 29
@@ -1032,7 +1032,7 @@ async def seed_initial_data():
         {
             "car_model": "Maruti Suzuki",
             "brand": "Maruti",
-            "city": "All India",
+            "city": "Telangana",
             "image_url": "https://customer-assets.emergentagent.com/job_a5689270-22d8-4a27-847f-79733a2db487/artifacts/pc3414xi_Maruti%20Suzuki.jpg",
             "max_members": 50,
             "current_members": 44
@@ -1040,7 +1040,7 @@ async def seed_initial_data():
         {
             "car_model": "Volkswagen",
             "brand": "Volkswagen",
-            "city": "All India",
+            "city": "Telangana",
             "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Volkswagen_logo_2019.svg/2560px-Volkswagen_logo_2019.svg.png",
             "max_members": 50,
             "current_members": 22
@@ -1048,7 +1048,7 @@ async def seed_initial_data():
         {
             "car_model": "Toyota",
             "brand": "Toyota",
-            "city": "All India",
+            "city": "Telangana",
             "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Toyota_carlogo.svg/2560px-Toyota_carlogo.svg.png",
             "max_members": 50,
             "current_members": 38
