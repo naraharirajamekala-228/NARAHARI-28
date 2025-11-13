@@ -23,6 +23,12 @@ const GroupDetailPage = ({ user, setUser }) => {
   const [userVote, setUserVote] = useState(null);
   const [loading, setLoading] = useState(true);
   const [hasPaid, setHasPaid] = useState(false);
+  const [showCarSelectionModal, setShowCarSelectionModal] = useState(false);
+  const [carData, setCarData] = useState({});
+  const [selectedModel, setSelectedModel] = useState('');
+  const [selectedVariant, setSelectedVariant] = useState('');
+  const [myPreference, setMyPreference] = useState(null);
+  const [groupPreferences, setGroupPreferences] = useState([]);
 
   useEffect(() => {
     fetchGroupData();
