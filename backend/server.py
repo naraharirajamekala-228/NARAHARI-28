@@ -446,71 +446,71 @@ async def seed_initial_data():
     if existing_groups > 0:
         return {"message": "Data already seeded"}
     
-    # Create sample groups - ONE group per car brand
+    # Create sample groups - ONE group per car brand with brand logos
     sample_groups = [
         {
             "car_model": "Tata Motors",
             "brand": "Tata",
             "city": "All India",
-            "image_url": "https://stimg.cardekho.com/images/carexteriorimages/930x620/Tata/Nexon/10904/1697697560971/front-left-side-47.jpg",
-            "max_members": 100,
-            "current_members": 67
+            "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Tata_logo.svg/2560px-Tata_logo.svg.png",
+            "max_members": 50,
+            "current_members": 32
         },
         {
             "car_model": "Mahindra & Mahindra",
             "brand": "Mahindra",
             "city": "All India",
-            "image_url": "https://stimg.cardekho.com/images/carexteriorimages/930x620/Mahindra/Scorpio-N/10745/1690271963623/front-left-side-47.jpg",
-            "max_members": 100,
-            "current_members": 78
+            "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Mahindra_%26_Mahindra_Logo.svg/2560px-Mahindra_%26_Mahindra_Logo.svg.png",
+            "max_members": 50,
+            "current_members": 41
         },
         {
             "car_model": "Kia Motors",
             "brand": "Kia",
             "city": "All India",
-            "image_url": "https://stimg.cardekho.com/images/carexteriorimages/930x620/Kia/Seltos/10902/1689588141785/front-left-side-47.jpg",
-            "max_members": 100,
-            "current_members": 54
+            "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Kia_logo2.svg/2560px-Kia_logo2.svg.png",
+            "max_members": 50,
+            "current_members": 28
         },
         {
             "car_model": "Hyundai Motors",
             "brand": "Hyundai",
             "city": "All India",
-            "image_url": "https://stimg.cardekho.com/images/carexteriorimages/930x620/Hyundai/Creta/10745/1697698244846/front-left-side-47.jpg",
-            "max_members": 100,
-            "current_members": 71
+            "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Hyundai_Motor_Company_logo.svg/2560px-Hyundai_Motor_Company_logo.svg.png",
+            "max_members": 50,
+            "current_members": 35
         },
         {
             "car_model": "Honda Cars",
             "brand": "Honda",
             "city": "All India",
-            "image_url": "https://stimg.cardekho.com/images/carexteriorimages/930x620/Honda/City/10583/1689322412833/front-left-side-47.jpg",
-            "max_members": 100,
-            "current_members": 62
+            "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Honda_logo.svg/2560px-Honda_logo.svg.png",
+            "max_members": 50,
+            "current_members": 29
         },
         {
             "car_model": "Maruti Suzuki",
             "brand": "Maruti",
             "city": "All India",
-            "image_url": "https://stimg.cardekho.com/images/carexteriorimages/930x620/Maruti/Brezza/10584/1689245686360/front-left-side-47.jpg",
-            "max_members": 100,
-            "current_members": 85
+            "image_url": "https://upload.wikimedia.org/wikipedia/en/thumb/8/8f/Maruti_Suzuki_India_Limited_Logo.svg/2560px-Maruti_Suzuki_India_Limited_Logo.svg.png",
+            "max_members": 50,
+            "current_members": 44
         },
         {
             "car_model": "Volkswagen",
             "brand": "Volkswagen",
             "city": "All India",
-            "image_url": "https://stimg.cardekho.com/images/carexteriorimages/930x620/Volkswagen/Virtus/10647/1689586075609/front-left-side-47.jpg",
-            "max_members": 100,
-            "current_members": 41
+            "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Volkswagen_logo_2019.svg/2560px-Volkswagen_logo_2019.svg.png",
+            "max_members": 50,
+            "current_members": 22
         },
         {
             "car_model": "Toyota",
             "brand": "Toyota",
             "city": "All India",
-            "image_url": "https://stimg.cardekho.com/images/carexteriorimages/930x620/Toyota/Fortuner/9611/1689588122826/front-left-side-47.jpg",
-            "max_members": 100,
-            "current_members": 73
+            "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Toyota_carlogo.svg/2560px-Toyota_carlogo.svg.png",
+            "max_members": 50,
+            "current_members": 38
         }
     ]
     
