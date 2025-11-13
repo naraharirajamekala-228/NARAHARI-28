@@ -414,6 +414,7 @@ const GroupDetailPage = ({ user, setUser }) => {
                 onValueChange={(value) => {
                   setSelectedModel(value);
                   setSelectedVariant('');
+                  setSelectedTransmission('');
                 }}
               >
                 <SelectTrigger id="car-model" data-testid="car-model-select">
@@ -432,7 +433,10 @@ const GroupDetailPage = ({ user, setUser }) => {
             {selectedModel && (
               <div>
                 <Label htmlFor="variant">Variant</Label>
-                <Select value={selectedVariant} onValueChange={setSelectedVariant}>
+                <Select value={selectedVariant} onValueChange={(value) => {
+                  setSelectedVariant(value);
+                  setSelectedTransmission('');
+                }}>
                   <SelectTrigger id="variant" data-testid="variant-select">
                     <SelectValue placeholder="Select variant" />
                   </SelectTrigger>
@@ -447,7 +451,25 @@ const GroupDetailPage = ({ user, setUser }) => {
               </div>
             )}
 
-            {selectedModel && selectedVariant && carData[selectedModel]?.[selectedVariant] && (
+            {selectedModel && selectedVariant && (
+              <div>
+                <Label htmlFor="transmission">Transmission</Label>
+                <Select value={selectedTransmission} onValueChange={setSelectedTransmission}>
+                  <SelectTrigger id="transmission" data-testid="transmission-select">
+                    <SelectValue placeholder="Select transmission" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.keys(carData[selectedModel]?.[selectedVariant] || {}).map((transmission) => (
+                      <SelectItem key={transmission} value={transmission}>
+                        {transmission}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
+            {selectedModel && selectedVariant && selectedTransmission && carData[selectedModel]?.[selectedVariant]?.[selectedTransmission] && (
               <>
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                   <div className="flex items-start justify-between">
