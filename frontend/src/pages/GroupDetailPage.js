@@ -27,6 +27,7 @@ const GroupDetailPage = ({ user, setUser }) => {
   const [carData, setCarData] = useState({});
   const [selectedModel, setSelectedModel] = useState('');
   const [selectedVariant, setSelectedVariant] = useState('');
+  const [selectedTransmission, setSelectedTransmission] = useState('');
   const [myPreference, setMyPreference] = useState(null);
   const [groupPreferences, setGroupPreferences] = useState([]);
 
