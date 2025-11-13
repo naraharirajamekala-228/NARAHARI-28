@@ -112,7 +112,10 @@ class Payment(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     user_id: str
     group_id: str
-    amount: float = 2000.0
+    amount: float
+    car_model: str
+    variant: str
+    on_road_price: float
     created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 class CarPreference(BaseModel):
