@@ -199,11 +199,11 @@ const HomePage = ({ user, setUser }) => {
                 onClick={() => handleGroupClick(group.id)}
                 className="bg-white rounded-2xl overflow-hidden border border-gray-200 card-hover cursor-pointer"
               >
-                <div className="relative h-48 overflow-hidden">
+                <div className="relative brand-logo-card">
                   <img
                     src={group.image_url}
                     alt={group.car_model}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full"
                   />
                   <div className="absolute top-3 right-3">
                     <div className={`status-badge status-${group.status}`}>
