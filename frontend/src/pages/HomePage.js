@@ -138,7 +138,7 @@ const HomePage = ({ user, setUser }) => {
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-[#0B5FFF] to-[#0951dd] text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl sm:text-5xl font-bold mb-4">India's First Group Car-Buying Platform</h2>
+          <h2 className="text-4xl sm:text-5xl font-bold mb-4">Telangana's First Group Car-Buying Platform</h2>
           <p className="text-lg sm:text-xl text-blue-100 mb-8">Unite with buyers. Negotiate better deals by brand.</p>
           
           {/* Search Bar */}
