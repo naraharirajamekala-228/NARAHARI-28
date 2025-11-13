@@ -112,7 +112,7 @@ class Payment(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     user_id: str
     group_id: str
-    amount: float = 5000.0
+    amount: float = 2000.0
     created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 # ============= HELPER FUNCTIONS =============
