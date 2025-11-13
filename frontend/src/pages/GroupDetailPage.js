@@ -447,7 +447,7 @@ const GroupDetailPage = ({ user, setUser }) => {
 
       {/* Car Selection Modal */}
       <Dialog open={showCarSelectionModal} onOpenChange={setShowCarSelectionModal}>
-        <DialogContent data-testid="car-selection-modal">
+        <DialogContent data-testid="car-selection-modal" className="max-w-md">
           <DialogHeader>
             <DialogTitle>Select Your Car & Variant</DialogTitle>
             <DialogDescription>
@@ -486,7 +486,7 @@ const GroupDetailPage = ({ user, setUser }) => {
                     <SelectValue placeholder="Select variant" />
                   </SelectTrigger>
                   <SelectContent>
-                    {carData[selectedModel]?.map((variant) => (
+                    {Object.keys(carData[selectedModel] || {}).map((variant) => (
                       <SelectItem key={variant} value={variant}>
                         {variant}
                       </SelectItem>
@@ -496,28 +496,83 @@ const GroupDetailPage = ({ user, setUser }) => {
               </div>
             )}
 
-            {selectedModel && selectedVariant && (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <div className="flex items-center">
-                  <Car className="w-5 h-5 text-blue-600 mr-3" />
-                  <div>
-                    <div className="font-semibold text-gray-900">Your Selection</div>
-                    <div className="text-sm text-gray-700">
-                      {selectedModel} - {selectedVariant}
+            {selectedModel && selectedVariant && carData[selectedModel]?.[selectedVariant] && (
+              <>
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start">
+                      <Car className="w-5 h-5 text-blue-600 mr-3 mt-0.5" />
+                      <div>
+                        <div className="font-semibold text-gray-900">Your Selection</div>
+                        <div className="text-sm text-gray-700 mt-1">
+                          {selectedModel} - {selectedVariant}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-3 pt-3 border-t border-blue-200">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-sm text-gray-600">On-Road Price:</span>
+                      <span className="text-lg font-bold text-gray-900">
+                        ₹{(carData[selectedModel][selectedVariant] / 100000).toFixed(2)} Lakh
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Joining Amount:</span>
+                      <span className="text-xl font-bold text-[#0B5FFF]">
+                        ₹{(() => {
+                          const price = carData[selectedModel][selectedVariant];
+                          if (price <= 1000000) return '1,000';
+                          if (price <= 2000000) return '2,000';
+                          if (price <= 3000000) return '3,000';
+                          return '5,000';
+                        })()}
+                      </span>
                     </div>
                   </div>
                 </div>
-              </div>
+
+                <div className="space-y-2 text-xs text-gray-600 bg-gray-50 p-3 rounded-lg">
+                  <div className="flex items-start">
+                    <CheckCircle2 className="w-3 h-3 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                    <span>Join bulk negotiation group</span>
+                  </div>
+                  <div className="flex items-start">
+                    <CheckCircle2 className="w-3 h-3 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                    <span>Vote on best dealer offers</span>
+                  </div>
+                  <div className="flex items-start">
+                    <CheckCircle2 className="w-3 h-3 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                    <span>Save thousands with group discounts</span>
+                  </div>
+                </div>
+
+                <Button 
+                  onClick={handlePayment} 
+                  className="w-full py-6 text-lg" 
+                  disabled={processing}
+                  data-testid="pay-now-btn"
+                >
+                  {processing ? 'Processing...' : `Pay ₹${(() => {
+                    const price = carData[selectedModel][selectedVariant];
+                    if (price <= 1000000) return '1,000';
+                    if (price <= 2000000) return '2,000';
+                    if (price <= 3000000) return '3,000';
+                    return '5,000';
+                  })()} & Join Now`}
+                </Button>
+
+                <p className="text-xs text-center text-gray-500">
+                  Mock payment (no actual charges)
+                </p>
+              </>
             )}
 
-            <Button 
-              onClick={handleSaveCarPreference} 
-              className="w-full" 
-              disabled={!selectedModel || !selectedVariant || processing}
-              data-testid="save-preference-btn"
-            >
-              {processing ? 'Saving...' : 'Save My Preference'}
-            </Button>
+            {(!selectedModel || !selectedVariant) && (
+              <p className="text-sm text-center text-gray-500 py-4">
+                Select car model and variant to see pricing
+              </p>
+            )}
           </div>
         </DialogContent>
       </Dialog>
