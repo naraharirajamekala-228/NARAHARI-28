@@ -514,9 +514,15 @@ async def seed_initial_data():
         }
     ]
     
+    # Use upsert to prevent duplicates
     for group_data in sample_groups:
         group = Group(**group_data)
-        await db.groups.insert_one(group.model_dump())
+        # Update if exists, insert if not
+        await db.groups.update_one(
+            {"brand": group.brand},
+            {"$set": group.model_dump()},
+            upsert=True
+        )
     
     return {"message": "Sample data seeded successfully"}
 
