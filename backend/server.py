@@ -821,9 +821,57 @@ CAR_DATA = {
 
 @api_router.get("/car-data/{brand}")
 async def get_car_data(brand: str):
+    # Try MongoDB first, fallback to hardcoded data
+    car_doc = await db.cars.find_one({"brand": brand}, {"_id": 0})
+    if car_doc:
+        return car_doc.get("models", {})
+    
+    # Fallback to hardcoded CAR_DATA
     if brand in CAR_DATA:
         return CAR_DATA[brand]
     return {}
+
+@api_router.get("/car-data")
+async def get_all_car_brands():
+    """Get list of all available car brands"""
+    # Try MongoDB first
+    brands_cursor = db.cars.find({}, {"_id": 0, "brand": 1})
+    brands = [doc["brand"] async for doc in brands_cursor]
+    
+    if brands:
+        return {"brands": brands}
+    
+    # Fallback to hardcoded data
+    return {"brands": list(CAR_DATA.keys())}
+
+@api_router.post("/admin/seed-car-data")
+async def seed_car_data_to_mongodb(admin_user: User = Depends(get_admin_user)):
+    """Migrate hardcoded CAR_DATA to MongoDB (Admin only)"""
+    # Check if already seeded
+    existing_count = await db.cars.count_documents({})
+    if existing_count > 0:
+        return {
+            "message": "Car data already exists in MongoDB", 
+            "brands_count": existing_count
+        }
+    
+    # Seed data from CAR_DATA dictionary
+    car_documents = []
+    for brand, models in CAR_DATA.items():
+        car_doc = {
+            "brand": brand,
+            "models": models
+        }
+        car_documents.append(car_doc)
+    
+    if car_documents:
+        await db.cars.insert_many(car_documents)
+        return {
+            "message": "Car data successfully seeded to MongoDB",
+            "brands_seeded": len(car_documents)
+        }
+    
+    return {"message": "No car data to seed"}
 
 # ============= ADMIN ROUTES =============
 
