@@ -478,7 +478,7 @@ const GroupDetailPage = ({ user, setUser }) => {
                       <div>
                         <div className="font-semibold text-gray-900">Your Selection</div>
                         <div className="text-sm text-gray-700 mt-1">
-                          {selectedModel} - {selectedVariant}
+                          {selectedModel} - {selectedVariant} ({selectedTransmission})
                         </div>
                       </div>
                     </div>
