@@ -259,29 +259,29 @@ const GroupDetailPage = ({ user, setUser }) => {
                   </Button>
                 )}
 
-                {isMember && (
+                {isMember && myPreference && (
                   <div className="bg-green-50 border border-green-200 rounded-xl p-4" data-testid="member-badge">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center">
-                        <CheckCircle2 className="w-5 h-5 text-green-600 mr-3" />
-                        <div>
-                          <span className="text-green-800 font-medium">You are a member of this group</span>
-                          {myPreference && (
-                            <div className="text-sm text-green-700 mt-1">
-                              Selected: {myPreference.car_model} - {myPreference.variant}
-                            </div>
-                          )}
+                    <div className="flex items-center">
+                      <CheckCircle2 className="w-5 h-5 text-green-600 mr-3" />
+                      <div>
+                        <span className="text-green-800 font-medium">You are a member of this group</span>
+                        <div className="text-sm text-green-700 mt-1">
+                          <Car className="w-3 h-3 inline mr-1" />
+                          {myPreference.car_model} - {myPreference.variant}
+                          <span className="ml-2 text-gray-600">
+                            (₹{(myPreference.on_road_price / 100000).toFixed(2)} Lakh)
+                          </span>
                         </div>
                       </div>
-                      <Button
-                        onClick={() => setShowCarSelectionModal(true)}
-                        variant="outline"
-                        size="sm"
-                        data-testid="select-car-btn"
-                      >
-                        <Car className="w-4 h-4 mr-2" />
-                        {myPreference ? 'Change Car' : 'Select Car'}
-                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {isMember && !myPreference && (
+                  <div className="bg-green-50 border border-green-200 rounded-xl p-4" data-testid="member-badge">
+                    <div className="flex items-center">
+                      <CheckCircle2 className="w-5 h-5 text-green-600 mr-3" />
+                      <span className="text-green-800 font-medium">You are a member of this group</span>
                     </div>
                   </div>
                 )}
