@@ -182,6 +182,15 @@ const GroupDetailPage = ({ user, setUser }) => {
               </div>
 
               <div className="p-6">
+                <div className="mb-4">
+                  <h1 className="text-3xl font-bold text-gray-900 mb-2">{group.car_model}</h1>
+                  <div className="flex items-center text-gray-600">
+                    <MapPin className="w-5 h-5 mr-2" />
+                    <span className="text-lg">{group.city}</span>
+                  </div>
+                </div>
+
+                <div className="mb-6">
                 <div className="mb-6">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center text-gray-700">
