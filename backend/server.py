@@ -985,87 +985,94 @@ async def seed_initial_data():
     # Check if data already exists
     existing_groups = await db.groups.count_documents({})
     if existing_groups > 0:
-        return {"message": "Data already seeded"}
+        return {"message": "Data already seeded", "total_groups": existing_groups}
     
-    # Create sample groups - ONE group per car brand with brand logos
-    sample_groups = [
+    # All Indian States and UTs
+    states = [
+        "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
+        "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand",
+        "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur",
+        "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab",
+        "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura",
+        "Uttar Pradesh", "Uttarakhand", "West Bengal",
+        "Andaman and Nicobar Islands", "Chandigarh", "Dadra and Nagar Haveli and Daman and Diu",
+        "Delhi", "Jammu and Kashmir", "Ladakh", "Lakshadweep", "Puducherry"
+    ]
+    
+    # Brand configuration
+    brands_config = [
         {
             "car_model": "Tata Motors",
             "brand": "Tata",
-            "city": "Telangana",
-            "image_url": "https://customer-assets.emergentagent.com/job_a5689270-22d8-4a27-847f-79733a2db487/artifacts/jig16627_tata.png",
-            "max_members": 50,
-            "current_members": 32
+            "image_url": "https://customer-assets.emergentagent.com/job_a5689270-22d8-4a27-847f-79733a2db487/artifacts/jig16627_tata.png"
         },
         {
             "car_model": "Mahindra & Mahindra",
             "brand": "Mahindra",
-            "city": "Telangana",
-            "image_url": "https://customer-assets.emergentagent.com/job_a5689270-22d8-4a27-847f-79733a2db487/artifacts/y5bo7393_mahindra.png",
-            "max_members": 50,
-            "current_members": 41
+            "image_url": "https://customer-assets.emergentagent.com/job_a5689270-22d8-4a27-847f-79733a2db487/artifacts/y5bo7393_mahindra.png"
         },
         {
             "car_model": "Kia Motors",
             "brand": "Kia",
-            "city": "Telangana",
-            "image_url": "https://customer-assets.emergentagent.com/job_a5689270-22d8-4a27-847f-79733a2db487/artifacts/ynyx5p8u_Kia.png",
-            "max_members": 50,
-            "current_members": 28
+            "image_url": "https://customer-assets.emergentagent.com/job_a5689270-22d8-4a27-847f-79733a2db487/artifacts/ynyx5p8u_Kia.png"
         },
         {
             "car_model": "Hyundai Motors",
             "brand": "Hyundai",
-            "city": "Telangana",
-            "image_url": "https://customer-assets.emergentagent.com/job_a5689270-22d8-4a27-847f-79733a2db487/artifacts/pl3kib9p_Hyundai.png",
-            "max_members": 50,
-            "current_members": 35
+            "image_url": "https://customer-assets.emergentagent.com/job_a5689270-22d8-4a27-847f-79733a2db487/artifacts/pl3kib9p_Hyundai.png"
         },
         {
             "car_model": "Honda Cars",
             "brand": "Honda",
-            "city": "Telangana",
-            "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Honda_logo.svg/2560px-Honda_logo.svg.png",
-            "max_members": 50,
-            "current_members": 29
+            "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Honda_logo.svg/2560px-Honda_logo.svg.png"
         },
         {
             "car_model": "Maruti Suzuki",
             "brand": "Maruti",
-            "city": "Telangana",
-            "image_url": "https://customer-assets.emergentagent.com/job_a5689270-22d8-4a27-847f-79733a2db487/artifacts/pc3414xi_Maruti%20Suzuki.jpg",
-            "max_members": 50,
-            "current_members": 44
+            "image_url": "https://customer-assets.emergentagent.com/job_a5689270-22d8-4a27-847f-79733a2db487/artifacts/pc3414xi_Maruti%20Suzuki.jpg"
         },
         {
             "car_model": "Volkswagen",
             "brand": "Volkswagen",
-            "city": "Telangana",
-            "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Volkswagen_logo_2019.svg/2560px-Volkswagen_logo_2019.svg.png",
-            "max_members": 50,
-            "current_members": 22
+            "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Volkswagen_logo_2019.svg/2560px-Volkswagen_logo_2019.svg.png"
         },
         {
             "car_model": "Toyota",
             "brand": "Toyota",
-            "city": "Telangana",
-            "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Toyota_carlogo.svg/2560px-Toyota_carlogo.svg.png",
-            "max_members": 50,
-            "current_members": 38
+            "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Toyota_carlogo.svg/2560px-Toyota_carlogo.svg.png"
         }
     ]
     
-    # Use upsert to prevent duplicates
+    # Create groups for each state and brand combination
+    import random
+    sample_groups = []
+    
+    for state in states:
+        for brand_config in brands_config:
+            # Generate random member count for variety (between 15 and 48)
+            current_members = random.randint(15, 48)
+            
+            group_data = {
+                "car_model": brand_config["car_model"],
+                "brand": brand_config["brand"],
+                "city": state,
+                "image_url": brand_config["image_url"],
+                "max_members": 50,
+                "current_members": current_members
+            }
+            sample_groups.append(group_data)
+    
+    # Insert all groups
     for group_data in sample_groups:
         group = Group(**group_data)
-        # Update if exists, insert if not
-        await db.groups.update_one(
-            {"brand": group.brand},
-            {"$set": group.model_dump()},
-            upsert=True
-        )
+        await db.groups.insert_one(group.model_dump())
     
-    return {"message": "Sample data seeded successfully"}
+    return {
+        "message": "All state groups seeded successfully",
+        "total_states": len(states),
+        "total_brands": len(brands_config),
+        "total_groups_created": len(sample_groups)
+    }
 
 # Include the router in the main app
 app.include_router(api_router)
