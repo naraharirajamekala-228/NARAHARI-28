@@ -31,16 +31,28 @@ const HomePage = ({ user, setUser }) => {
 
   useEffect(() => {
     filterGroups();
-  }, [searchQuery, selectedBrand, groups]);
+  }, [searchQuery, selectedBrand, groups, selectedState]);
 
-  const fetchGroups = async () => {
+  const fetchGroups = async (state = null) => {
     try {
-      const response = await axios.get(`${API}/groups`);
+      const params = state ? { city: state } : {};
+      const response = await axios.get(`${API}/groups`, { params });
       setGroups(response.data);
       setFilteredGroups(response.data);
     } catch (error) {
       toast.error('Failed to load groups');
     }
+  };
+
+  const handleStateSelect = (state) => {
+    setSelectedState(state);
+    fetchGroups(state);
+  };
+
+  const handleBackToMap = () => {
+    setSelectedState(null);
+    setGroups([]);
+    setFilteredGroups([]);
   };
 
   const filterGroups = () => {
