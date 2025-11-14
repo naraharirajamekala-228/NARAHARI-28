@@ -25,8 +25,13 @@ const HomePage = ({ user, setUser }) => {
 
   const brands = ['All', 'Tata', 'Mahindra', 'Kia', 'Hyundai', 'Maruti', 'Honda', 'Volkswagen', 'Toyota'];
 
+  // Load saved state from localStorage on mount
   useEffect(() => {
-    fetchGroups();
+    const savedState = localStorage.getItem('selectedState');
+    if (savedState) {
+      setSelectedState(savedState);
+      fetchGroups(savedState);
+    }
   }, []);
 
   useEffect(() => {
