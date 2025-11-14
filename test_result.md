@@ -184,8 +184,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "API endpoint /car-data/{brand}"
-    - "MongoDB migration"
+    - "Seed Database with All States"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
