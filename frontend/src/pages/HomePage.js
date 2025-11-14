@@ -155,50 +155,74 @@ const HomePage = ({ user, setUser }) => {
           <h2 className="text-4xl sm:text-5xl font-bold mb-4">India's First Group Car-Buying Platform</h2>
           <p className="text-lg sm:text-xl text-blue-100 mb-8">Unite with buyers. Negotiate better deals by brand.</p>
           
-          {/* Search Bar */}
-          <div className="max-w-2xl mx-auto relative">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <Input
-              data-testid="search-input"
-              type="text"
-              placeholder="Find your brand group (e.g., Tata, Mahindra)"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-12 py-6 text-base bg-white"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Brand Filters */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center space-x-2 overflow-x-auto">
-            <Filter className="w-5 h-5 text-gray-500 flex-shrink-0" />
-            {brands.map((brand) => (
-              <button
-                key={brand}
-                data-testid={`filter-${brand.toLowerCase()}-btn`}
-                onClick={() => setSelectedBrand(brand.toLowerCase())}
-                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
-                  selectedBrand === brand.toLowerCase()
-                    ? 'bg-[#0B5FFF] text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
+          {selectedState && (
+            <div className="flex items-center justify-center space-x-2 mb-4">
+              <MapPin className="w-5 h-5" />
+              <span className="text-lg font-medium">Selected State: {selectedState}</span>
+              <Button 
+                onClick={handleBackToMap}
+                variant="outline"
+                size="sm"
+                className="ml-4 bg-white text-blue-600 hover:bg-blue-50"
               >
-                {brand}
-              </button>
-            ))}
-          </div>
+                Change State
+              </Button>
+            </div>
+          )}
+          
+          {/* Search Bar - Only show when state is selected */}
+          {selectedState && (
+            <div className="max-w-2xl mx-auto relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Input
+                data-testid="search-input"
+                type="text"
+                placeholder="Find your brand group (e.g., Tata, Mahindra)"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-12 py-6 text-base bg-white"
+              />
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Groups Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-6">
-          <h3 className="text-2xl font-bold text-gray-900">Active Brand Groups</h3>
-          <p className="text-gray-600 mt-1">{filteredGroups.length} brand groups available</p>
+      {/* State Selection or Groups */}
+      {!selectedState ? (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <IndiaMap onStateSelect={handleStateSelect} />
         </div>
+      ) : (
+        <>
+          {/* Brand Filters */}
+          <div className="bg-white border-b border-gray-200">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+              <div className="flex items-center space-x-2 overflow-x-auto">
+                <Filter className="w-5 h-5 text-gray-500 flex-shrink-0" />
+                {brands.map((brand) => (
+                  <button
+                    key={brand}
+                    data-testid={`filter-${brand.toLowerCase()}-btn`}
+                    onClick={() => setSelectedBrand(brand.toLowerCase())}
+                    className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
+                      selectedBrand === brand.toLowerCase()
+                        ? 'bg-[#0B5FFF] text-white'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    {brand}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Groups Grid */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="mb-6">
+              <h3 className="text-2xl font-bold text-gray-900">Active Brand Groups in {selectedState}</h3>
+              <p className="text-gray-600 mt-1">{filteredGroups.length} brand groups available</p>
+            </div>
 
         {filteredGroups.length === 0 ? (
           <div className="text-center py-16">
