@@ -285,7 +285,9 @@ const HomePage = ({ user, setUser }) => {
             ))}
           </div>
         )}
-      </div>
+          </div>
+        </>
+      )}
 
       {/* Auth Modal */}
       <Dialog open={showAuthModal} onOpenChange={setShowAuthModal}>
