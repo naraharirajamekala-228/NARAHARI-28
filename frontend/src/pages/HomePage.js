@@ -51,11 +51,14 @@ const HomePage = ({ user, setUser }) => {
 
   const handleStateSelect = (state) => {
     setSelectedState(state);
+    localStorage.setItem('selectedState', state);
     fetchGroups(state);
+    toast.success(`State set to ${state}`);
   };
 
   const handleBackToMap = () => {
     setSelectedState(null);
+    localStorage.removeItem('selectedState');
     setGroups([]);
     setFilteredGroups([]);
   };
