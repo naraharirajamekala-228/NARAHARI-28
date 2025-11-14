@@ -339,16 +339,293 @@ class BackendTester:
         
         return all_passed
     
+    def test_clear_existing_groups(self):
+        """Test clearing existing groups (if possible)"""
+        print("\n=== Testing Clear Existing Groups ===")
+        
+        # First check if there are existing groups
+        url = f"{BACKEND_URL}/groups"
+        
+        try:
+            response = self.session.get(url)
+            
+            if response.status_code == 200:
+                data = response.json()
+                existing_count = len(data) if isinstance(data, list) else 0
+                
+                self.log_test(
+                    "Check Existing Groups", 
+                    True, 
+                    f"Found {existing_count} existing groups",
+                    {"existing_groups": existing_count}
+                )
+                
+                # Note: We don't actually clear groups as there's no delete endpoint
+                # This is just to check the current state
+                return True
+            else:
+                self.log_test("Check Existing Groups", False, f"HTTP {response.status_code}", {"response": response.text})
+                return False
+                
+        except Exception as e:
+            self.log_test("Check Existing Groups", False, f"Request failed: {str(e)}")
+            return False
+    
+    def test_seed_data(self):
+        """Test POST /api/seed-data - Seed all state groups"""
+        print("\n=== Testing Seed Data Endpoint ===")
+        
+        url = f"{BACKEND_URL}/seed-data"
+        
+        try:
+            response = self.session.post(url)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check response structure
+                required_fields = ["message", "total_states", "total_brands", "total_groups_created"]
+                missing_fields = [field for field in required_fields if field not in data]
+                
+                if missing_fields:
+                    self.log_test(
+                        "Seed Data Response Structure", 
+                        False, 
+                        f"Missing required fields: {missing_fields}",
+                        {"response": data}
+                    )
+                    return False
+                
+                # Verify expected counts
+                expected_states = 36  # All Indian states and UTs
+                expected_brands = 8   # Tata, Mahindra, Kia, Hyundai, Honda, Maruti, Volkswagen, Toyota
+                expected_total_groups = expected_states * expected_brands  # 288
+                
+                if (data["total_states"] == expected_states and 
+                    data["total_brands"] == expected_brands and 
+                    data["total_groups_created"] == expected_total_groups):
+                    
+                    self.log_test(
+                        "Seed Data", 
+                        True, 
+                        f"Successfully seeded {data['total_groups_created']} groups ({data['total_states']} states × {data['total_brands']} brands)",
+                        {
+                            "states": data["total_states"],
+                            "brands": data["total_brands"], 
+                            "total_groups": data["total_groups_created"]
+                        }
+                    )
+                    return True
+                else:
+                    self.log_test(
+                        "Seed Data", 
+                        False, 
+                        f"Incorrect counts - Expected: {expected_total_groups} groups ({expected_states} states × {expected_brands} brands)",
+                        {
+                            "expected": {"states": expected_states, "brands": expected_brands, "total": expected_total_groups},
+                            "actual": {"states": data["total_states"], "brands": data["total_brands"], "total": data["total_groups_created"]}
+                        }
+                    )
+                    return False
+            else:
+                self.log_test("Seed Data", False, f"HTTP {response.status_code}", {"response": response.text})
+                return False
+                
+        except Exception as e:
+            self.log_test("Seed Data", False, f"Request failed: {str(e)}")
+            return False
+    
+    def test_groups_by_city(self, city: str, expected_brands: List[str] = None):
+        """Test GET /api/groups?city={city} - Get groups for specific city"""
+        url = f"{BACKEND_URL}/groups"
+        params = {"city": city}
+        
+        try:
+            response = self.session.get(url, params=params)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if isinstance(data, list):
+                    # Check if we have 8 groups (one for each brand)
+                    if len(data) == 8:
+                        # Verify each group has correct structure
+                        brands_found = []
+                        valid_groups = True
+                        validation_errors = []
+                        
+                        for group in data:
+                            # Check required fields
+                            required_fields = ["brand", "city", "current_members", "max_members"]
+                            missing_fields = [field for field in required_fields if field not in group]
+                            
+                            if missing_fields:
+                                validation_errors.append(f"Group missing fields: {missing_fields}")
+                                valid_groups = False
+                                continue
+                            
+                            # Verify city matches
+                            if group["city"] != city:
+                                validation_errors.append(f"Group city '{group['city']}' doesn't match requested '{city}'")
+                                valid_groups = False
+                            
+                            # Verify member counts
+                            if not (15 <= group["current_members"] <= 48):
+                                validation_errors.append(f"Group {group['brand']} has invalid current_members: {group['current_members']} (should be 15-48)")
+                                valid_groups = False
+                            
+                            if group["max_members"] != 50:
+                                validation_errors.append(f"Group {group['brand']} has invalid max_members: {group['max_members']} (should be 50)")
+                                valid_groups = False
+                            
+                            brands_found.append(group["brand"])
+                        
+                        # Check if all expected brands are present
+                        if expected_brands:
+                            missing_brands = [brand for brand in expected_brands if brand not in brands_found]
+                            extra_brands = [brand for brand in brands_found if brand not in expected_brands]
+                            
+                            if missing_brands or extra_brands:
+                                validation_errors.append(f"Brand mismatch - Missing: {missing_brands}, Extra: {extra_brands}")
+                                valid_groups = False
+                        
+                        if valid_groups:
+                            self.log_test(
+                                f"Groups for {city}", 
+                                True, 
+                                f"Successfully retrieved 8 groups with valid structure",
+                                {
+                                    "city": city,
+                                    "groups_count": len(data),
+                                    "brands": brands_found,
+                                    "member_counts": [g["current_members"] for g in data]
+                                }
+                            )
+                            return True
+                        else:
+                            self.log_test(
+                                f"Groups for {city}", 
+                                False, 
+                                f"Groups validation failed",
+                                {"validation_errors": validation_errors}
+                            )
+                            return False
+                    else:
+                        self.log_test(
+                            f"Groups for {city}", 
+                            False, 
+                            f"Expected 8 groups, got {len(data)}",
+                            {"groups_count": len(data), "groups": [g.get("brand", "unknown") for g in data]}
+                        )
+                        return False
+                else:
+                    self.log_test(
+                        f"Groups for {city}", 
+                        False, 
+                        "Response should be a list",
+                        {"response_type": type(data), "response": data}
+                    )
+                    return False
+            else:
+                self.log_test(f"Groups for {city}", False, f"HTTP {response.status_code}", {"response": response.text})
+                return False
+                
+        except Exception as e:
+            self.log_test(f"Groups for {city}", False, f"Request failed: {str(e)}")
+            return False
+    
+    def test_kerala_groups(self):
+        """Test GET /api/groups?city=Kerala"""
+        print("\n=== Testing Kerala Groups ===")
+        expected_brands = ["Tata", "Mahindra", "Kia", "Hyundai", "Honda", "Maruti", "Volkswagen", "Toyota"]
+        return self.test_groups_by_city("Kerala", expected_brands)
+    
+    def test_tamil_nadu_groups(self):
+        """Test GET /api/groups?city=Tamil Nadu"""
+        print("\n=== Testing Tamil Nadu Groups ===")
+        expected_brands = ["Tata", "Mahindra", "Kia", "Hyundai", "Honda", "Maruti", "Volkswagen", "Toyota"]
+        return self.test_groups_by_city("Tamil Nadu", expected_brands)
+    
+    def test_delhi_groups(self):
+        """Test GET /api/groups?city=Delhi"""
+        print("\n=== Testing Delhi Groups ===")
+        expected_brands = ["Tata", "Mahindra", "Kia", "Hyundai", "Honda", "Maruti", "Volkswagen", "Toyota"]
+        return self.test_groups_by_city("Delhi", expected_brands)
+    
+    def test_verify_total_groups_count(self):
+        """Verify total groups count after seeding"""
+        print("\n=== Verifying Total Groups Count ===")
+        
+        url = f"{BACKEND_URL}/groups"
+        
+        try:
+            response = self.session.get(url)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if isinstance(data, list):
+                    total_groups = len(data)
+                    expected_total = 288  # 36 states × 8 brands
+                    
+                    if total_groups == expected_total:
+                        self.log_test(
+                            "Total Groups Count", 
+                            True, 
+                            f"Correct total groups count: {total_groups}",
+                            {"total_groups": total_groups, "expected": expected_total}
+                        )
+                        return True
+                    else:
+                        self.log_test(
+                            "Total Groups Count", 
+                            False, 
+                            f"Incorrect total groups count: {total_groups} (expected {expected_total})",
+                            {"total_groups": total_groups, "expected": expected_total}
+                        )
+                        return False
+                else:
+                    self.log_test(
+                        "Total Groups Count", 
+                        False, 
+                        "Response should be a list",
+                        {"response_type": type(data)}
+                    )
+                    return False
+            else:
+                self.log_test("Total Groups Count", False, f"HTTP {response.status_code}", {"response": response.text})
+                return False
+                
+        except Exception as e:
+            self.log_test("Total Groups Count", False, f"Request failed: {str(e)}")
+            return False
+
     def run_all_tests(self):
         """Run all backend tests"""
-        print("🚀 Starting MyApp Backend Car Data API Tests")
+        print("🚀 Starting MyApp Backend API Tests")
         print(f"Backend URL: {BACKEND_URL}")
         print("=" * 60)
         
         # Test authentication setup
         auth_success = self.test_user_registration()
         
-        # Test car data endpoints
+        # Test seeding functionality (NEW TESTS)
+        print("\n" + "=" * 60)
+        print("🌱 SEED DATA TESTING")
+        print("=" * 60)
+        
+        clear_success = self.test_clear_existing_groups()
+        seed_success = self.test_seed_data()
+        total_count_success = self.test_verify_total_groups_count()
+        kerala_success = self.test_kerala_groups()
+        tamil_nadu_success = self.test_tamil_nadu_groups()
+        delhi_success = self.test_delhi_groups()
+        
+        # Test car data endpoints (EXISTING TESTS)
+        print("\n" + "=" * 60)
+        print("🚗 CAR DATA TESTING")
+        print("=" * 60)
+        
         brands_success = self.test_get_all_brands()
         tata_success = self.test_tata_models()
         mahindra_success = self.test_mahindra_models()
@@ -384,14 +661,18 @@ class BackendTester:
                 if not result["success"]:
                     print(f"  - {result['test']}: {result['message']}")
         
-        # Overall assessment
-        critical_tests = [auth_success, brands_success, tata_success, mahindra_success, kia_success]
-        critical_passed = sum(critical_tests)
+        # Overall assessment - Updated to include seeding tests
+        seed_tests = [seed_success, total_count_success, kerala_success, tamil_nadu_success, delhi_success]
+        car_data_tests = [auth_success, brands_success, tata_success, mahindra_success, kia_success]
         
-        print(f"\n🎯 CRITICAL TESTS: {critical_passed}/5 passed")
+        seed_passed = sum(seed_tests)
+        car_data_passed = sum(car_data_tests)
         
-        if critical_passed == 5:
-            print("🎉 All critical car data API tests PASSED!")
+        print(f"\n🌱 SEED DATA TESTS: {seed_passed}/5 passed")
+        print(f"🚗 CAR DATA TESTS: {car_data_passed}/5 passed")
+        
+        if seed_passed == 5 and car_data_passed == 5:
+            print("🎉 All critical tests PASSED!")
             return True
         else:
             print("⚠️  Some critical tests FAILED - needs attention")
